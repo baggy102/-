@@ -1,5 +1,7 @@
-const express = require("express");
+import express, { Request, Response } from "express";
+import multer from "multer";
 const router = express.Router();
+
 const user_info = require("../controller/Cuser_info");
 const wanter_board = require("../controller/Cwanter_board");
 const wanter_comment = require("../controller/Cwanter_comment");
@@ -7,14 +9,13 @@ const helper_board = require("../controller/Chelper_board");
 const helper_comment = require("../controller/Chelper_comment");
 const notice = require("../controller/Cnotice");
 
-const multer = require("multer");
 const path = require("path");
 const uploadDetail = multer({
   storage: multer.diskStorage({
-    destination(req, file, done) {
+    destination(req: Request, file, done) {
       done(null, "../client/public/userImg");
     },
-    filename(req, file, done) {
+    filename(req: Request, file, done) {
       const ext = path.extname(file.originalname);
       done(null, Date.now() + ext);
     },
@@ -117,9 +118,7 @@ router.delete("/helper/:boardId", helper_board.delete_helper_board);
 
 router.post("/helper/:boardId/hit", helper_board.hit_helper_board);
 
-
 router.post("/helper/:boardId/like", helper_board.helper_board_like);
-
 
 // ======= Helper_comment =======
 router.get("/helper/:boardId/comment", helper_comment.read_helper_comment);
@@ -152,4 +151,5 @@ router.delete("/notice/:boardId", notice.delete_notice);
 // search;
 router.get("/search/:boardType/:optionValue", wanter_board.search_wanter_board);
 
-module.exports = router;
+// module.exports = router;
+export default router;

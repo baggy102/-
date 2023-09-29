@@ -1,9 +1,14 @@
+import express, { RequestHandler } from "express";
+import session from "express-session";
+import multer from "multer";
+// import User_info from "../models/User_info";
+
 const Errands = require("../models");
 const { Op } = require("sequelize");
 
 // ======= User sign =======
 // 로그인
-exports.userLogin = async (req, res) => {
+export const userLogin: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.findOne({
       where: {
@@ -23,7 +28,7 @@ exports.userLogin = async (req, res) => {
 };
 
 // ID 중복 검사
-exports.checkUserId = async (req, res) => {
+export const checkUserId: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.findOne({
       attributes: ["user_id"],
@@ -41,7 +46,7 @@ exports.checkUserId = async (req, res) => {
 };
 
 // 닉네임 중복검사
-exports.checkUserName = async (req, res) => {
+export const checkUserName: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.findOne({
       attributes: ["user_name"],
@@ -61,7 +66,7 @@ exports.checkUserName = async (req, res) => {
 };
 
 // 회원가입
-exports.userRegister = async (req, res) => {
+export const userRegister: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.findOne({
       where: { user_id: { [Op.eq]: req.body.user_id } },
@@ -84,10 +89,10 @@ exports.userRegister = async (req, res) => {
 };
 
 // 로그아웃
-exports.userLogout = (req, res) => {
+export const userLogout: RequestHandler = async (req, res) => {
   try {
     console.log(req.session);
-    req.session.destroy((err) => {
+    req.session.destroy((err: Error) => {
       if (err) {
         throw err;
       }
@@ -101,7 +106,7 @@ exports.userLogout = (req, res) => {
 };
 
 // 메인페이지 상위 5명 보여주기
-exports.read_few_user = async (req, res) => {
+export const read_few_user: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.findAll({
       order: [["user_like", "desc"]],
@@ -113,7 +118,7 @@ exports.read_few_user = async (req, res) => {
   }
 };
 // 전체 다 보여주기
-exports.read_user = async (req, res) => {
+export const read_user: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.findAll({
       order: [["user_like", "desc"]],
@@ -125,7 +130,7 @@ exports.read_user = async (req, res) => {
 };
 
 // detail
-exports.read_detail_user = async (req, res) => {
+export const read_detail_user: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.findOne({
       where: { id: { [Op.eq]: req.params.user } },
@@ -136,8 +141,8 @@ exports.read_detail_user = async (req, res) => {
   }
 };
 
-// 추천수
-exports.userLike = async (req, res) => {
+// 추천수s
+export const userLike: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.User_info.increment(
       { user_like: 1 },
@@ -150,7 +155,10 @@ exports.userLike = async (req, res) => {
 };
 
 // 회원탈퇴
-exports.userWithdrawal = async (req, res) => {
+export const userWithdrawal: RequestHandler<{
+  user_name: string;
+  userId: string;
+}> = async (req, res) => {
   try {
     const auth = await Errands.User_info.findOne({
       attributes: ["user_name"],
@@ -163,8 +171,12 @@ exports.userWithdrawal = async (req, res) => {
       if (!result) {
         res.send(false);
       } else {
-        req.session.destroy();
-        res.send(true);
+        req.session.destroy((err: Error) => {
+          if (err) {
+            throw err;
+          }
+          res.send(true);
+        });
       }
     }
   } catch (err) {
@@ -172,7 +184,7 @@ exports.userWithdrawal = async (req, res) => {
   }
 };
 // 회원정보 수정
-exports.userUpdate = async (req, res) => {
+export const userUpdate: RequestHandler = async (req, res) => {
   try {
     const auth = await Errands.User_info.findOne({
       attributes: ["user_name"],
@@ -207,7 +219,7 @@ exports.userUpdate = async (req, res) => {
   }
 };
 
-exports.user_wanter_board = async (req, res) => {
+export const user_wanter_board: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Wanter_board.findAll({
       where: { wanter_board_writer: { [Op.eq]: req.body.user_name } },
@@ -218,7 +230,7 @@ exports.user_wanter_board = async (req, res) => {
   }
 };
 
-exports.user_helper_board = async (req, res) => {
+export const user_helper_board: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Helper_board.findAll({
       where: { helper_board_writer: { [Op.eq]: req.body.user_name } },
@@ -230,7 +242,7 @@ exports.user_helper_board = async (req, res) => {
   }
 };
 
-exports.set_user_img = async (req, res) => {
+export const set_user_img: RequestHandler = async (req, res) => {
   try {
     const [result] = await Errands.User_info.update(
       {
@@ -250,7 +262,7 @@ exports.set_user_img = async (req, res) => {
   }
 };
 
-exports.user_like = async (req, res) => {
+export const user_like: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       const search = await Errands.User_info.findOne({

@@ -1,8 +1,11 @@
-const express = require("express");
+import dotenv from "dotenv";
+import express, { Request, Response } from "express";
+import cors from "cors";
+import session from "express-session";
+import indexRouter from "./routes/errands";
+import multer, { Multer } from "multer";
+
 const app = express();
-const cors = require("cors");
-const session = require("express-session");
-const dotenv = require("dotenv");
 const PORT = 8080;
 dotenv.config();
 
@@ -20,15 +23,15 @@ app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: process.env.SECRET_KEY,
+    secret: process.env.SECRET_KEY as string,
     sameSite: "None",
     cookie: { maxAge: 60 * 6000 * 24 },
   })
 );
 
-const indexRouter = require("./routes/errands");
-
 app.use("/api", indexRouter);
+
+// app.use((err: Error, req: Request, res: Response) => {})
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
