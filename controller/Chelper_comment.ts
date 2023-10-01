@@ -1,9 +1,12 @@
+import express, { RequestHandler } from "express";
+import session from "express-session";
+
 const Errands = require("../models");
 const { Op } = require("sequelize");
 
 // ======= Helper_comment =======
 // 댓글 보여주기
-exports.read_helper_comment = async (req, res) => {
+export const read_helper_comment: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Helper_comment.findAll({
       where: { helper_comment_board_id: { [Op.eq]: req.params.boardId } },
@@ -15,7 +18,7 @@ exports.read_helper_comment = async (req, res) => {
 };
 
 // 댓글 생성
-exports.create_helper_comment = async (req, res) => {
+export const create_helper_comment: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send(false);
@@ -33,7 +36,7 @@ exports.create_helper_comment = async (req, res) => {
 };
 
 // 댓글 수정
-exports.update_helper_comment = async (req, res) => {
+export const update_helper_comment: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인 ㄱ");
@@ -72,7 +75,7 @@ exports.update_helper_comment = async (req, res) => {
 };
 
 // 댓글 삭제
-exports.delete_helper_comment = async (req, res) => {
+export const delete_helper_comment: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인 ㄱㄱ");

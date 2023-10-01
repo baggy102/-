@@ -11,12 +11,13 @@
     "typeRoots": ["./types"],
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "experimentalDecorators": true
   },
   "ts-Node": {
     "files": true,
     "esm": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "models"]
 }

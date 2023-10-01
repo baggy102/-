@@ -1,9 +1,13 @@
+import express, { RequestHandler } from "express";
+import session from "express-session";
+import multer from "multer";
+
 const Errands = require("../models");
 const { Op } = require("sequelize");
 
 // ======= Wanter_board =======
 // 매인페이지에 5개 보여주기 deadline순 5개
-exports.read_few_wanter_board = async (req, res) => {
+export const read_few_wanter_board: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Wanter_board.findAll({
       where: { wanter_board_done: { [Op.eq]: 0 } },
@@ -18,7 +22,7 @@ exports.read_few_wanter_board = async (req, res) => {
 };
 
 // 전체 다 보여주기
-exports.read_wanter_board = async (req, res) => {
+export const read_wanter_board: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Wanter_board.findAll({
       order: [["wanter_board_date", "asc"]],
@@ -32,7 +36,7 @@ exports.read_wanter_board = async (req, res) => {
 };
 
 // 게시물 하나만 보여주기
-exports.read_one_wanter_board = async (req, res) => {
+export const read_one_wanter_board: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Wanter_board.findOne({
       where: { wanter_board_id: { [Op.eq]: req.params.boardId } },
@@ -44,7 +48,7 @@ exports.read_one_wanter_board = async (req, res) => {
 };
 
 // 게시물 생성
-exports.create_wanter_board = async (req, res) => {
+export const create_wanter_board: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인하시오");
@@ -66,7 +70,7 @@ exports.create_wanter_board = async (req, res) => {
 };
 
 // 게시물 수정
-exports.update_wanter_board = async (req, res) => {
+export const update_wanter_board: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인하시오");
@@ -76,7 +80,7 @@ exports.update_wanter_board = async (req, res) => {
         where: { wanter_board_id: { [Op.eq]: req.params.boardId } },
       });
       if (
-        auth.dataValues.wanter_board_writer !== req.session.user_info_user_name
+        auth.dataValues.wanter_board_writer !== req.session.user_info.user_name
       ) {
         res.send("작성자만 수정가능");
       } else {
@@ -101,7 +105,7 @@ exports.update_wanter_board = async (req, res) => {
 };
 
 // 게시물 삭제
-exports.delete_wanter_board = async (req, res) => {
+export const delete_wanter_board: RequestHandler = async (req, res) => {
   try {
     const auth = await Errands.Wanter_board.findOne({
       attributes: ["wanter_board_writer"],
@@ -128,7 +132,7 @@ exports.delete_wanter_board = async (req, res) => {
 };
 
 // 조회수 up
-exports.hit_wanter_board = async (req, res) => {
+export const hit_wanter_board: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Wanter_board.increment(
       { wanter_board_hit: 1 },
@@ -141,7 +145,7 @@ exports.hit_wanter_board = async (req, res) => {
 };
 
 // 검색
-exports.search_wanter_board = async (req, res) => {
+export const search_wanter_board: RequestHandler = async (req, res) => {
   try {
     const { boardType, optionValue } = req.params;
     const search = req.query.search;
@@ -208,7 +212,7 @@ exports.search_wanter_board = async (req, res) => {
 // 게시물 done, proceeding params -> session 변경
 
 // 게시물 done 처리
-exports.done_wanter_board = async (req, res) => {
+export const done_wanter_board: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인하시오");
@@ -242,7 +246,7 @@ exports.done_wanter_board = async (req, res) => {
   }
 };
 
-exports.wanter_board_like = async (req, res) => {
+export const wanter_board_like: RequestHandler = async (req, res) => {
   try {
     const auth = await Errands.Who_wanter_like.findOne({
       where: {

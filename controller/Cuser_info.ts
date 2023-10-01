@@ -1,7 +1,5 @@
 import express, { RequestHandler } from "express";
 import session from "express-session";
-import multer from "multer";
-// import User_info from "../models/User_info";
 
 const Errands = require("../models");
 const { Op } = require("sequelize");

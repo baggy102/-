@@ -1,10 +1,13 @@
+import express, { RequestHandler } from "express";
+import session from "express-session";
+
 const Errands = require("../models");
 const { Op } = require("sequelize");
 
 // ======= Notice Board =======
 
 // 메인페이지 몇 개만 불러오기 일단 만듬
-exports.read_few_notice = async (req, res) => {
+export const read_few_notice: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Notice.findAll({
       order: [["notice_date", "desc"]],
@@ -17,7 +20,7 @@ exports.read_few_notice = async (req, res) => {
 };
 
 // 전체 불러오기
-exports.read_notice = async (req, res) => {
+export const read_notice: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Notice.findAll({
       order: [["wanter_board_date", "asc"]],
@@ -29,7 +32,7 @@ exports.read_notice = async (req, res) => {
 };
 
 // 하나만 불러오기
-exports.read_one_notice = async (req, res) => {
+export const read_one_notice: RequestHandler = async (req, res) => {
   try {
     const result = await Errands.Notice.findOne({
       where: { notice_id: { [Op.eq]: req.params.boardId } },
@@ -41,7 +44,7 @@ exports.read_one_notice = async (req, res) => {
 };
 
 // 공지 생성
-exports.create_notice = async (req, res) => {
+export const create_notice: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인하시오");
@@ -52,7 +55,7 @@ exports.create_notice = async (req, res) => {
       });
       if (auth.dataValues.user_type == "root") {
         const result = Errands.Notice.create({
-          notice_writer: req.session.user_name,
+          notice_writer: req.session.user_info.user_name,
           notice_title: req.body.notice_title,
           notice_content: req.body.notice_content,
         });
@@ -68,7 +71,7 @@ exports.create_notice = async (req, res) => {
 };
 
 // 공지 수정
-exports.update_notice = async (req, res) => {
+export const update_notice: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인하시오");
@@ -99,7 +102,7 @@ exports.update_notice = async (req, res) => {
 };
 
 // 공지 삭제
-exports.delete_notice = async (req, res) => {
+export const delete_notice: RequestHandler = async (req, res) => {
   try {
     if (!req.session.user_info) {
       res.send("로그인하시요");

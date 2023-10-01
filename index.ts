@@ -14,7 +14,11 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://52.62.33.115"],
+    origin: [
+      "http://localhost:3000",
+      // "http://52.62.33.115",
+      "http://localhost:8080",
+    ],
     credentials: true,
   })
 );
@@ -33,6 +37,6 @@ app.use("/api", indexRouter);
 
 // app.use((err: Error, req: Request, res: Response) => {})
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);
 });
