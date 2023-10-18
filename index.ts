@@ -1,11 +1,11 @@
-import dotenv from "dotenv";
-import express, { Request, Response } from "express";
+import * as dotenv from "dotenv";
+import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
 import indexRouter from "./routes/errands";
 import multer, { Multer } from "multer";
 
-const app = express();
+const app: Express = express();
 const PORT = 8080;
 dotenv.config();
 
@@ -14,11 +14,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      // "http://52.62.33.115",
-      "http://localhost:8080",
-    ],
+    origin: ["http://localhost:3000", "http://13.125.221.221"],
     credentials: true,
   })
 );

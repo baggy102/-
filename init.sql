@@ -15,7 +15,7 @@ create table user_info (
 );
 
 create table wanter_board (
-	wanter_board_id int not null primary key auto_increment,
+	wanter_board_id int primary key auto_increment,
     wanter_board_writer varchar(20) not null,
     foreign key(wanter_board_writer) references user_info(user_name) ON UPDATE CASCADE on delete cascade,
     wanter_board_title varchar(100) not null,
@@ -29,7 +29,7 @@ create table wanter_board (
 );
 
 create table helper_board (
-	helper_board_id int not null primary key auto_increment,
+	helper_board_id int primary key auto_increment,
     helper_board_writer varchar(20) not null,
     foreign key(helper_board_writer) references user_info(user_name) ON UPDATE CASCADE on delete cascade,
     helper_board_title varchar(100) not null,

@@ -1,23 +1,23 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "outDir": "./dist/",
-    "sourceMap": true,
+    "target": "es2016",
+    "module": "commonjs" /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */,
+    "sourceMap": true /* Specify an output folder for all emitted files. */,
+    "esModuleInterop": true /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */ /* Skip type checking .d.ts files that are included with TypeScript. */,
+    "skipLibCheck": true,
     "noImplicitAny": true,
-    "module": "commonjs",
-    "target": "es6",
-    // "types": ["node"],
-    "jsx": "react",
-    "typeRoots": ["./types"],
     "moduleResolution": "node",
+    "outDir": "./dist/",
+    "typeRoots": ["./types"],
     "resolveJsonModule": true,
-    "esModuleInterop": true,
     "experimentalDecorators": true
   },
+
   "ts-Node": {
     "files": true,
     "esm": true
   },
-  "include": ["**/*.ts"],
+  // "include": ["**/*.ts"],
   "exclude": ["node_modules", "models"]
 }

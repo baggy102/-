@@ -1,0 +1,15 @@
+{
+    "development": {
+        "username": "root",
+        "password": "1234",
+        "database": "errands_app",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "timezone": "+09:00",
+        "dialectOptions": {
+            "charset": "utf8",
+            "dateStrings": true,
+            "typeCast": true
+        }
+    }
+}

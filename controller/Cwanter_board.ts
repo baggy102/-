@@ -1,21 +1,29 @@
 import express, { RequestHandler } from "express";
 import session from "express-session";
 import multer from "multer";
+import config from "../config/config.json";
 
 const Errands = require("../models");
 const { Op } = require("sequelize");
+const mysql = require("mysql2");
+
+const conn = mysql
+  .createPool({
+    host: config.development.host,
+    user: config.development.username,
+    password: config.development.password,
+    database: config.development.database,
+  })
+  .promise();
 
 // ======= Wanter_board =======
 // 매인페이지에 5개 보여주기 deadline순 5개
 export const read_few_wanter_board: RequestHandler = async (req, res) => {
   try {
-    const result = await Errands.Wanter_board.findAll({
-      where: { wanter_board_done: { [Op.eq]: 0 } },
-      order: [["wanter_board_dead_line", "desc"]],
-      limit: 5,
-    });
-    console.log(req.session);
-    res.send(result);
+    const sql =
+      "SELECT * FROM wanter_board order by wanter_board_dead_line DESC LIMIT 5";
+    const [rows] = await conn.query(sql);
+    res.send(rows);
   } catch (err) {
     res.send(err);
   }
@@ -24,12 +32,9 @@ export const read_few_wanter_board: RequestHandler = async (req, res) => {
 // 전체 다 보여주기
 export const read_wanter_board: RequestHandler = async (req, res) => {
   try {
-    const result = await Errands.Wanter_board.findAll({
-      order: [["wanter_board_date", "asc"]],
-    });
-    res.send(result);
-
-    //
+    const sql = "SELECT * FROM wanter_board order by wanter_board_date ASC";
+    const [rows] = await conn.query(sql);
+    res.send(rows);
   } catch (err) {
     res.send(err);
   }
@@ -38,10 +43,11 @@ export const read_wanter_board: RequestHandler = async (req, res) => {
 // 게시물 하나만 보여주기
 export const read_one_wanter_board: RequestHandler = async (req, res) => {
   try {
-    const result = await Errands.Wanter_board.findOne({
-      where: { wanter_board_id: { [Op.eq]: req.params.boardId } },
-    });
-    res.send(result);
+    const header = req.params;
+    const params: any[] = [header.boardId];
+    const sql: string = "SELECT * FROM wanter_board WHERE wanter_board_id = ?";
+    const [rows] = await conn.query(sql, params);
+    res.send(rows);
   } catch (err) {
     res.send(err);
   }
@@ -50,19 +56,23 @@ export const read_one_wanter_board: RequestHandler = async (req, res) => {
 // 게시물 생성
 export const create_wanter_board: RequestHandler = async (req, res) => {
   try {
+    const body = req.body;
     if (!req.session.user_info) {
       res.send("로그인하시오");
     } else {
-      const result = await Errands.Wanter_board.create({
-        wanter_board_writer: req.session.user_info.user_name,
-        wanter_board_title: req.body.wanter_board_title,
-        wanter_board_content: req.body.wanter_board_content,
-        wanter_board_place: req.body.wanter_board_place,
-        wanter_board_dead_line: req.body.wanter_board_dead_line,
-        wanter_board_place_detail: req.body.wanter_board_place_detail,
-        wanter_board_done: false,
-      });
-      res.send(result);
+      const params: any[] = [
+        req.session.user_info.user_name,
+        body.wanter_board_title,
+        body.wanter_board_content,
+        body.wanter_board_place,
+        body.wanter_board_dead_line,
+        body.wanter_board_place_detail,
+        false,
+      ];
+      const createBoardSql: string =
+        "INSERT INTO wanter_board (wanter_board_writer, wanter_board_title, wanter_board_content, wanter_board_place, wanter_board_dead_line, wanter_board_place_detail,wanter_board_done) VALUES(?, ?, ?, ?, ?);";
+      const [rows] = await conn.query(createBoardSql, params);
+      res.send(rows);
     }
   } catch (err) {
     res.send(err);
@@ -72,28 +82,29 @@ export const create_wanter_board: RequestHandler = async (req, res) => {
 // 게시물 수정
 export const update_wanter_board: RequestHandler = async (req, res) => {
   try {
+    const header = req.params;
+    const params: any[] = [header.boardId];
+    const authSql =
+      "SELECT * FROM wanter_board WHERE wanter_board_id = ? LIMIT 1";
+    const body = req.body;
+    const updateParams: any[] = [
+      body.wanter_board_title,
+      body.wanter_board_content,
+      body.wanter_board_place,
+      body.wanter_board_done,
+    ];
+    const updateSql =
+      "UPDATE wanter_board SET wanter_board_title = ?, wanter_board_content = ?, wanter_board_place = ?, wanter_board_done = ? WHERE wanter_board_id = ?";
+
     if (!req.session.user_info) {
       res.send("로그인하시오");
     } else {
-      const auth = await Errands.Wanter_board.findOne({
-        attributes: ["wanter_board_writer"],
-        where: { wanter_board_id: { [Op.eq]: req.params.boardId } },
-      });
-      if (
-        auth.dataValues.wanter_board_writer !== req.session.user_info.user_name
-      ) {
-        res.send("작성자만 수정가능");
+      const [auth] = await conn.query(authSql, params);
+      if (auth[0].wanter_board_writer !== req.session.user_info.user_name) {
+        res.send("작성자만 수정 가능");
       } else {
-        const [result] = await Errands.Wanter_board.update(
-          {
-            wanter_board_title: req.body.wanter_board_title,
-            wanter_board_content: req.body.wanter_board_place,
-            wanter_board_place: req.body.wanter_board_place,
-            wanter_board_done: req.body.done,
-          },
-          { where: { wanter_board_id: { [Op.eq]: req.params.boardId } } }
-        );
-        if (result === 0) {
+        const [result] = await conn.query(updateSql, updateParams, params);
+        if (result[0] === 0) {
           return res.send(false);
         }
         res.send(true);
@@ -107,24 +118,24 @@ export const update_wanter_board: RequestHandler = async (req, res) => {
 // 게시물 삭제
 export const delete_wanter_board: RequestHandler = async (req, res) => {
   try {
-    const auth = await Errands.Wanter_board.findOne({
-      attributes: ["wanter_board_writer"],
-      where: { wanter_board_id: { [Op.eq]: req.params.boardId } },
-    });
-    if (
-      auth.dataValues.wanter_board_writer !== req.session.user_info.user_name
-    ) {
-      res.send("작성자만 삭제 가능");
+    const header = req.params;
+    const params: any[] = [header.boardId];
+    const sql =
+      "SELECT wanter_board_writer FROM wanter_board WHERE wanter_board_id = ? LIMIT 1";
+    const deleteSql = "DELETE FROM wanter_board WHERE wanter_board_id = ?";
+    if (!req.session.user_info) {
+      res.send("로그인하세욤");
     } else {
-      const result = await Errands.Wanter_board.destroy({
-        where: {
-          wanter_board_id: { [Op.eq]: req.params.boardId },
-        },
-      });
-      if (!result) {
-        return res.send(false);
+      const [auth] = await conn.query(sql, params);
+      if (auth[0].wanter_board_writer !== req.session.user_info.user_name) {
+        res.send("작성자만 삭제 가능");
+      } else {
+        const [result] = await conn.query(deleteSql, params);
+        if (!result[0]) {
+          return res.send(false);
+        }
+        res.send(true);
       }
-      res.send(true);
     }
   } catch (err) {
     res.send(err);
@@ -134,11 +145,12 @@ export const delete_wanter_board: RequestHandler = async (req, res) => {
 // 조회수 up
 export const hit_wanter_board: RequestHandler = async (req, res) => {
   try {
-    const result = await Errands.Wanter_board.increment(
-      { wanter_board_hit: 1 },
-      { where: { wanter_board_id: { [Op.eq]: req.params.boardId } } }
-    );
-    res.send(result);
+    const header = req.params;
+    const sql: string =
+      "UPDATE wanter_board SET wanter_board_hit = wanter_board_hit + 1 WHERE wanter_board_id = ?";
+    const params: any[] = [header.boardId];
+    const [rows] = await conn.query(sql, params);
+    res.send(rows);
   } catch (err) {
     res.send(err);
   }
@@ -156,9 +168,6 @@ export const search_wanter_board: RequestHandler = async (req, res) => {
             wanter_board_writer: { [Op.like]: `%${search}%` },
           },
         });
-        console.log("====");
-        console.log(req.params);
-        console.log(result);
         res.send(result);
       } else if (optionValue === "wanter_board_title") {
         const result = await Errands.Wanter_board.findAll({
@@ -182,9 +191,6 @@ export const search_wanter_board: RequestHandler = async (req, res) => {
             helper_board_writer: { [Op.like]: `%${search}%` },
           },
         });
-        console.log("====");
-        console.log(req.params);
-        console.log(result);
         res.send(result);
       } else if (optionValue === "helper_board_title") {
         const result = await Errands.Helper_board.findAll({
@@ -214,27 +220,21 @@ export const search_wanter_board: RequestHandler = async (req, res) => {
 // 게시물 done 처리
 export const done_wanter_board: RequestHandler = async (req, res) => {
   try {
+    const header = req.params;
+    const params: any[] = [header.boardId];
+    const sql =
+      "SELECT wanter_board_writer FROM wanter_board WHERE wanter_board_id = ? LIMIT 1";
+    const updateDoneSql: string =
+      "UPDATE wanter_board SET wanter_board_done = true WHERE wanter_board_id = ?";
     if (!req.session.user_info) {
       res.send("로그인하시오");
     } else {
-      const auth = await Errands.Wanter_board.findOne({
-        attributes: ["wanter_board_writer"],
-        where: { wanter_board_id: { [Op.eq]: req.params.boardId } },
-      });
-      if (
-        auth.dataValues.wanter_board_writer !== req.session.user_info.user_name
-      ) {
+      const [auth] = await conn.query(sql, params);
+      if (auth[0].wanter_board_writer !== req.session.user_info.user_name) {
         res.send("작성자만 완료가능");
       } else {
-        const [result] = await Errands.Wanter_board.update(
-          {
-            wanter_board_done: true,
-          },
-          { where: { wanter_board_id: { [Op.eq]: req.params.boardId } } }
-        );
-        console.log("========");
-        console.log(result);
-        if (result === 0) {
+        const [result] = await conn.qeury(updateDoneSql, params);
+        if (result[0] === 0) {
           res.send(false);
         } else {
           res.send(true);
@@ -248,21 +248,18 @@ export const done_wanter_board: RequestHandler = async (req, res) => {
 
 export const wanter_board_like: RequestHandler = async (req, res) => {
   try {
-    const auth = await Errands.Who_wanter_like.findOne({
-      where: {
-        where_wanter_board_id: { [Op.eq]: req.params.boardId },
-        who_user_name: { [Op.eq]: req.session.user_info.user_name },
-      },
-    });
-    if (!auth) {
-      await Errands.Who_wanter_like.create({
-        where_wanter_board_id: req.params.boardId,
-        who_user_name: req.session.user_info.user_name,
-      });
-      await Errands.Wanter_board.increment(
-        { wanter_board_like: 1 },
-        { where: { wanter_board_id: { [Op.eq]: req.params.boardId } } }
-      );
+    const header = req.params;
+    const params: any[] = [header.boardId, req.session.user_info.user_name];
+    const sql =
+      "SELECT * FROM who_wanter_like WHERE where_wanter_board_id = ?, who_user_name = ? LIMIT 1";
+    const createSql =
+      "INSERT INTO who_wanter_like (where_wnater_board_id, who_user_name) VALUES (?, ?)";
+    const likeSql: string =
+      "UPDATE wanter_board SET wanter_board_like = wanter_board_like + 1 WHERE wanter_board_id = ?";
+    const [auth] = await conn.query(sql, params);
+    if (!auth[0]) {
+      await conn.query(createSql, params);
+      await conn.query(likeSql, params[0]);
       res.send(true);
     } else {
       res.send(false); // 이미 좋아요 누른 게시글입니다
@@ -271,36 +268,3 @@ export const wanter_board_like: RequestHandler = async (req, res) => {
     res.send(err);
   }
 };
-
-// 게시물 진행 중 처리
-// exports.proceed_wanter_board = async (req, res) => {
-//   try {
-//     // if (!req.session.user_info) {
-//     //   res.send("로그인하시오");
-//     // } else {
-//     const auth = await Errands.Wanter_board.findOne({
-//       attributes: ["wanter_board_writer"],
-//       where: { wanter_board_id: { [Op.eq]: req.params.boardId } },
-//     });
-//     if (auth.dataValues.wanter_board_writer !== req.body.user_name) {
-//       res.send("작성자만 완료가능");
-//     } else {
-//       const [result] = await Errands.Wanter_board.update(
-//         {
-//           wanter_board_done: 2,
-//           // true 값 대신 다른 값으로 변경 (database 설정 추가 해야 함)
-//         },
-//         { where: { wanter_board_id: { [Op.eq]: req.params.boardId } } }
-//       );
-//       console.log("========");
-//       console.log(result);
-//       if (result === 0) {
-//         res.send(false);
-//       } else {
-//         res.send(true);
-//       }
-//     }
-//   } catch (err) {
-//     res.send(err);
-//   }
-// };
