@@ -19,6 +19,7 @@ const conn = mysql
 // ======= Wanter_board =======
 // 매인페이지에 5개 보여주기 deadline순 5개
 export const read_few_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const sql =
       "SELECT * FROM wanter_board order by wanter_board_dead_line DESC LIMIT 5";
@@ -31,6 +32,7 @@ export const read_few_wanter_board: RequestHandler = async (req, res) => {
 
 // 전체 다 보여주기
 export const read_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const sql = "SELECT * FROM wanter_board order by wanter_board_date ASC";
     const [rows] = await conn.query(sql);
@@ -42,6 +44,7 @@ export const read_wanter_board: RequestHandler = async (req, res) => {
 
 // 게시물 하나만 보여주기
 export const read_one_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -55,6 +58,7 @@ export const read_one_wanter_board: RequestHandler = async (req, res) => {
 
 // 게시물 생성
 export const create_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const body = req.body;
     if (!req.session.user_info) {
@@ -81,6 +85,7 @@ export const create_wanter_board: RequestHandler = async (req, res) => {
 
 // 게시물 수정
 export const update_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -117,6 +122,7 @@ export const update_wanter_board: RequestHandler = async (req, res) => {
 
 // 게시물 삭제
 export const delete_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -144,6 +150,7 @@ export const delete_wanter_board: RequestHandler = async (req, res) => {
 
 // 조회수 up
 export const hit_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const header = req.params;
     const sql: string =
@@ -158,6 +165,7 @@ export const hit_wanter_board: RequestHandler = async (req, res) => {
 
 // 검색
 export const search_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const { boardType, optionValue } = req.params;
     const search = req.query.search;
@@ -219,6 +227,7 @@ export const search_wanter_board: RequestHandler = async (req, res) => {
 
 // 게시물 done 처리
 export const done_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -247,6 +256,7 @@ export const done_wanter_board: RequestHandler = async (req, res) => {
 };
 
 export const wanter_board_like: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId, req.session.user_info.user_name];

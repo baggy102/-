@@ -19,6 +19,7 @@ const conn = mysql
 // ======= Helper_board =======
 // 최신5개만 가져오기
 export const read_few_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const sql =
       "SELECT * FROM helper_board order by helper_board_date ASC LIMIT 3";
@@ -31,6 +32,7 @@ export const read_few_helper_board: RequestHandler = async (req, res) => {
 
 // 전체 다 가져오기
 export const read_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const sql = "SELECT * FROM helper_board order by helper_board_date ASC";
     const [rows] = await conn.query(sql);
@@ -42,6 +44,7 @@ export const read_helper_board: RequestHandler = async (req, res) => {
 
 // 게시물 하나만 가져오기
 export const read_one_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -55,6 +58,7 @@ export const read_one_helper_board: RequestHandler = async (req, res) => {
 
 // 게시물 생성
 export const create_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const body = req.body;
 
@@ -84,6 +88,7 @@ export const create_helper_board: RequestHandler = async (req, res) => {
 
 // 게시물 수정
 export const update_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -120,6 +125,7 @@ export const update_helper_board: RequestHandler = async (req, res) => {
 
 // 게시물 삭제
 export const delete_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -147,6 +153,7 @@ export const delete_helper_board: RequestHandler = async (req, res) => {
 
 // 조회수 up
 export const hit_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const header = req.params;
     const sql: string =
@@ -160,6 +167,7 @@ export const hit_helper_board: RequestHandler = async (req, res) => {
 };
 
 export const helper_board_like: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Helper_boards']
   try {
     const header = req.params;
     const params: any[] = [header.boardId, req.session.user_info.user_name];

@@ -14,12 +14,12 @@ const conn = mysql
   .promise();
 
 export const userLogin: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const body = req.body;
     const sql: string =
       "SELECT * FROM user_info WHERE user_id = ? && user_pw = ?";
     const params: any[] = [body.user_id, body.user_pw];
-    // const result = await conn.query(sql, params);
     const [rows] = await conn.query(sql, params);
     if (rows[0] != null) {
       req.session.user_info = rows[0];
@@ -33,6 +33,7 @@ export const userLogin: RequestHandler = async (req, res) => {
 };
 
 export const checkUserId: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const body = req.body;
     const sql: string =
@@ -51,6 +52,7 @@ export const checkUserId: RequestHandler = async (req, res) => {
 
 // 닉네임 중복검사
 export const checkUserName: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const body = req.body;
     const sql: string =
@@ -70,6 +72,7 @@ export const checkUserName: RequestHandler = async (req, res) => {
 
 // 회원가입
 export const userRegister: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const body = req.body;
     const sql: string =
@@ -96,6 +99,7 @@ export const userRegister: RequestHandler = async (req, res) => {
 
 // 로그아웃
 export const userLogout: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     console.log(req.session);
     req.session.destroy((err: Error) => {
@@ -113,6 +117,7 @@ export const userLogout: RequestHandler = async (req, res) => {
 
 // 메인페이지 상위 5명 보여주기
 export const read_few_user: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const [rows] = await conn.query(
       "SELECT * FROM user_info ORDER BY user_like DESC LIMIT 5"
@@ -124,6 +129,7 @@ export const read_few_user: RequestHandler = async (req, res) => {
 };
 // 전체 다 보여주기
 export const read_user: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const [rows] = await conn.query(
       "SELECT * FROM user_info ORDER BY user_like DESC LIMIT 5"
@@ -136,6 +142,7 @@ export const read_user: RequestHandler = async (req, res) => {
 
 // detail
 export const read_detail_user: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const header = req.params;
     const sql: string = "SELECT * FROM user_info WHERE id = ? LIMIT 1";
@@ -149,6 +156,7 @@ export const read_detail_user: RequestHandler = async (req, res) => {
 
 // 추천수s
 export const userLike: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const header = req.params;
     const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
@@ -160,11 +168,32 @@ export const userLike: RequestHandler = async (req, res) => {
   }
 };
 
+// export const userLike: RequestHandler = async (req, res) => {
+//     // #swagger.tags = ['Users']
+//   try {
+//     if (!req.session.checkLiked) {
+//       req.session.checkLiked = true;
+//       req.session.checkLikedExpires = Date.now() + 60 * 60 * 24 * 1000;
+
+//       const header = req.params;
+//       const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
+//       const params: any[] = [header.user];
+//       const [rows] = await conn.query(sql, params);
+//       res.send(rows);
+//     } else {
+//       res.send("오늘 이미 추천하셨습니다.");
+//     }
+//   } catch (err) {
+//     res.send(err);
+//   }
+// };
+
 // 회원탈퇴
 export const userWithdrawal: RequestHandler<{
   user_name: string;
   userId: string;
 }> = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const header = req.params;
     const sql: string = "SELECT user_name FROM user_info WHERE id = ? LIMIT 1";
@@ -191,6 +220,7 @@ export const userWithdrawal: RequestHandler<{
 
 // 회원정보 수정
 export const userUpdate: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const userConfig = req.session.user_info;
     const params: any[] = [userConfig.user_name];
@@ -202,6 +232,7 @@ export const userUpdate: RequestHandler = async (req, res) => {
     if (auth[0].user_name == userConfig.user_name) {
       const body = req.body;
       const header = req.params;
+      const headParams: any[] = [header.userId];
       const updateParams: any[] = [
         body.user_id,
         body.user_pw,
@@ -210,7 +241,7 @@ export const userUpdate: RequestHandler = async (req, res) => {
       ];
       const updateSql: string =
         "UPDATE user_info SET user_id = ?, user_pw = ?, user_name = ?, user_type = ? WHERE id = ?";
-      const [rows] = await conn.query(updateSql, updateParams, header.userId);
+      const [rows] = await conn.query(updateSql, updateParams, headParams);
       console.log(rows);
       if (rows === 0) {
         console.log(rows);
@@ -224,36 +255,8 @@ export const userUpdate: RequestHandler = async (req, res) => {
   }
 };
 
-// export const userUpdate: RequestHandler = async (req, res) => {
-//   try {
-//     const auth = await Errands.User_info.findOne({
-//       attributes: ["user_name"],
-//       where: { user_name: { [Op.eq]: req.session.user_info.user_name } },
-//     });
-//     console.log(auth);
-//     if (auth.dataValues.user_name == req.session.user_info.user_name) {
-//       const [result] = await Errands.User_info.update(
-//         {
-//           user_id: req.body.user_id,
-//           user_pw: req.body.user_pw,
-//           user_name: req.body.user_name,
-//           user_type: req.body.user_type,
-//         },
-//         { where: { id: { [Op.eq]: req.params.userId } } }
-//       );
-//       if (result === 0) {
-//         console.log(result);
-//         return res.send(false);
-//       } else {
-//         res.send(true);
-//       }
-//     }
-//   } catch (err) {
-//     res.send(err);
-//   }
-// };
-
 export const user_wanter_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const body = req.body;
     const params: any[] = [body.user_name];
@@ -266,6 +269,7 @@ export const user_wanter_board: RequestHandler = async (req, res) => {
 };
 
 export const user_helper_board: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const body = req.body;
     const params: any[] = [body.user_name];
@@ -278,6 +282,7 @@ export const user_helper_board: RequestHandler = async (req, res) => {
 };
 
 export const set_user_img: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     const updateFile = req.file;
     const header = req.params;
@@ -296,6 +301,7 @@ export const set_user_img: RequestHandler = async (req, res) => {
 };
 
 export const user_like: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     if (!req.session.user_info) {
       const header = req.params;

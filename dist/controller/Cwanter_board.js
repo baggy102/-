@@ -28,6 +28,7 @@ const conn = mysql
 // ======= Wanter_board =======
 // 매인페이지에 5개 보여주기 deadline순 5개
 const read_few_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const sql = "SELECT * FROM wanter_board order by wanter_board_dead_line DESC LIMIT 5";
         const [rows] = yield conn.query(sql);
@@ -40,6 +41,7 @@ const read_few_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, fu
 exports.read_few_wanter_board = read_few_wanter_board;
 // 전체 다 보여주기
 const read_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const sql = "SELECT * FROM wanter_board order by wanter_board_date ASC";
         const [rows] = yield conn.query(sql);
@@ -52,6 +54,7 @@ const read_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.read_wanter_board = read_wanter_board;
 // 게시물 하나만 보여주기
 const read_one_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const header = req.params;
         const params = [header.boardId];
@@ -66,6 +69,7 @@ const read_one_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, fu
 exports.read_one_wanter_board = read_one_wanter_board;
 // 게시물 생성
 const create_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const body = req.body;
         if (!req.session.user_info) {
@@ -93,6 +97,7 @@ const create_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.create_wanter_board = create_wanter_board;
 // 게시물 수정
 const update_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const header = req.params;
         const params = [header.boardId];
@@ -129,6 +134,7 @@ const update_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.update_wanter_board = update_wanter_board;
 // 게시물 삭제
 const delete_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const header = req.params;
         const params = [header.boardId];
@@ -158,6 +164,7 @@ const delete_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.delete_wanter_board = delete_wanter_board;
 // 조회수 up
 const hit_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const header = req.params;
         const sql = "UPDATE wanter_board SET wanter_board_hit = wanter_board_hit + 1 WHERE wanter_board_id = ?";
@@ -172,6 +179,7 @@ const hit_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, functio
 exports.hit_wanter_board = hit_wanter_board;
 // 검색
 const search_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const { boardType, optionValue } = req.params;
         const search = req.query.search;
@@ -239,6 +247,7 @@ exports.search_wanter_board = search_wanter_board;
 // 게시물 done, proceeding params -> session 변경
 // 게시물 done 처리
 const done_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const header = req.params;
         const params = [header.boardId];
@@ -269,6 +278,7 @@ const done_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.done_wanter_board = done_wanter_board;
 const wanter_board_like = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_boards']
     try {
         const header = req.params;
         const params = [header.boardId, req.session.user_info.user_name];

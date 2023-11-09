@@ -26,6 +26,7 @@ const conn = mysql
 // ======= Wanter_comment =======
 // 댓글 보여주기
 const read_wanter_comment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_comments']
     try {
         const header = req.params;
         const params = [header.boardId];
@@ -40,6 +41,7 @@ const read_wanter_comment = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.read_wanter_comment = read_wanter_comment;
 // 댓글 생성
 const create_wanter_comment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_comments']
     try {
         const params = [
             req.params.boardId,
@@ -62,6 +64,7 @@ const create_wanter_comment = (req, res) => __awaiter(void 0, void 0, void 0, fu
 exports.create_wanter_comment = create_wanter_comment;
 // 댓글 수정
 const update_wanter_comment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_comments']
     try {
         const header = req.params;
         const body = req.body;
@@ -98,6 +101,7 @@ const update_wanter_comment = (req, res) => __awaiter(void 0, void 0, void 0, fu
 exports.update_wanter_comment = update_wanter_comment;
 // 댓글 삭제
 const delete_wanter_comment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Wanter_comments']
     try {
         const header = req.params;
         const body = req.body;

@@ -24,6 +24,7 @@ const conn = mysql
 })
     .promise();
 const userLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const body = req.body;
         const sql = "SELECT * FROM user_info WHERE user_id = ? && user_pw = ?";
@@ -44,6 +45,7 @@ const userLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.userLogin = userLogin;
 const checkUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const body = req.body;
         const sql = "SELECT user_id FROM user_info WHERE user_id = ? LIMIT 1";
@@ -63,6 +65,7 @@ const checkUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.checkUserId = checkUserId;
 // 닉네임 중복검사
 const checkUserName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const body = req.body;
         const sql = "SELECT user_name FROM user_info WHERE user_name = ? LIMIT 1";
@@ -82,6 +85,7 @@ const checkUserName = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.checkUserName = checkUserName;
 // 회원가입
 const userRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const body = req.body;
         const sql = "SELECT user_id FROM user_info WHERE user_id = ? LIMIT 1";
@@ -108,6 +112,7 @@ const userRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.userRegister = userRegister;
 // 로그아웃
 const userLogout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         console.log(req.session);
         req.session.destroy((err) => {
@@ -126,6 +131,7 @@ const userLogout = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.userLogout = userLogout;
 // 메인페이지 상위 5명 보여주기
 const read_few_user = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const [rows] = yield conn.query("SELECT * FROM user_info ORDER BY user_like DESC LIMIT 5");
         res.send(rows[0]);
@@ -137,6 +143,7 @@ const read_few_user = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.read_few_user = read_few_user;
 // 전체 다 보여주기
 const read_user = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const [rows] = yield conn.query("SELECT * FROM user_info ORDER BY user_like DESC LIMIT 5");
         res.send(rows);
@@ -148,6 +155,7 @@ const read_user = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.read_user = read_user;
 // detail
 const read_detail_user = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const header = req.params;
         const sql = "SELECT * FROM user_info WHERE id = ? LIMIT 1";
@@ -162,6 +170,7 @@ const read_detail_user = (req, res) => __awaiter(void 0, void 0, void 0, functio
 exports.read_detail_user = read_detail_user;
 // 추천수s
 const userLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const header = req.params;
         const sql = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
@@ -176,6 +185,7 @@ const userLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.userLike = userLike;
 // 회원탈퇴
 const userWithdrawal = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const header = req.params;
         const sql = "SELECT user_name FROM user_info WHERE id = ? LIMIT 1";
@@ -204,6 +214,7 @@ const userWithdrawal = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.userWithdrawal = userWithdrawal;
 // 회원정보 수정
 const userUpdate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const userConfig = req.session.user_info;
         const params = [userConfig.user_name];
@@ -213,6 +224,7 @@ const userUpdate = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (auth[0].user_name == userConfig.user_name) {
             const body = req.body;
             const header = req.params;
+            const headParams = [header.userId];
             const updateParams = [
                 body.user_id,
                 body.user_pw,
@@ -220,7 +232,7 @@ const userUpdate = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 body.user_type,
             ];
             const updateSql = "UPDATE user_info SET user_id = ?, user_pw = ?, user_name = ?, user_type = ? WHERE id = ?";
-            const [rows] = yield conn.query(updateSql, updateParams, header.userId);
+            const [rows] = yield conn.query(updateSql, updateParams, headParams);
             console.log(rows);
             if (rows === 0) {
                 console.log(rows);
@@ -236,35 +248,8 @@ const userUpdate = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.userUpdate = userUpdate;
-// export const userUpdate: RequestHandler = async (req, res) => {
-//   try {
-//     const auth = await Errands.User_info.findOne({
-//       attributes: ["user_name"],
-//       where: { user_name: { [Op.eq]: req.session.user_info.user_name } },
-//     });
-//     console.log(auth);
-//     if (auth.dataValues.user_name == req.session.user_info.user_name) {
-//       const [result] = await Errands.User_info.update(
-//         {
-//           user_id: req.body.user_id,
-//           user_pw: req.body.user_pw,
-//           user_name: req.body.user_name,
-//           user_type: req.body.user_type,
-//         },
-//         { where: { id: { [Op.eq]: req.params.userId } } }
-//       );
-//       if (result === 0) {
-//         console.log(result);
-//         return res.send(false);
-//       } else {
-//         res.send(true);
-//       }
-//     }
-//   } catch (err) {
-//     res.send(err);
-//   }
-// };
 const user_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const body = req.body;
         const params = [body.user_name];
@@ -278,6 +263,7 @@ const user_wanter_board = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.user_wanter_board = user_wanter_board;
 const user_helper_board = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const body = req.body;
         const params = [body.user_name];
@@ -291,6 +277,7 @@ const user_helper_board = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.user_helper_board = user_helper_board;
 const set_user_img = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         const updateFile = req.file;
         const header = req.params;
@@ -311,6 +298,7 @@ const set_user_img = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.set_user_img = set_user_img;
 const user_like = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // #swagger.tags = ['Users']
     try {
         if (!req.session.user_info) {
             const header = req.params;

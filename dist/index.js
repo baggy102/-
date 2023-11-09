@@ -40,13 +40,20 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const express_session_1 = __importDefault(require("express-session"));
 const errands_1 = __importDefault(require("./routes/errands"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_output_json_1 = __importDefault(require("./swagger/swagger-output.json"));
 const app = (0, express_1.default)();
 const PORT = 8080;
 dotenv.config();
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default, { explorer: true }));
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000", "http://13.125.221.221"],
+    origin: [
+        "http://localhost:3000",
+        "http://13.125.221.221",
+        "http://localhost:8080",
+    ],
     credentials: true,
 }));
 app.use((0, express_session_1.default)({

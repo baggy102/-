@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
+    "swagger-autogen": "node ./swagger/swagger.js",
     "clean": "tsc --build --clean",
     "start": "nodemon index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -28,7 +29,10 @@
     "session": "^0.1.0",
     "socket.io": "^4.6.1",
     "source-map-loader": "^4.0.1",
-    "tsc": "^2.0.4"
+    "swagger-cli": "^4.0.4",
+    "swagger-ui-express": "^5.0.0",
+    "tsc": "^2.0.4",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.39",
@@ -39,8 +43,11 @@
     "@types/express-session": "^1.17.8",
     "@types/multer": "^1.4.7",
     "@types/node": "^20.8.6",
+    "@types/swagger-ui-express": "^4.1.5",
     "@types/validator": "^13.11.2",
+    "@types/yamljs": "^0.2.33",
     "body-parser": "^1.20.2",
+    "swagger-autogen": "^2.23.6",
     "typecript": "^0.0.1-security",
     "typescript": "^5.2.2"
   }

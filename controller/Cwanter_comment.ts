@@ -17,6 +17,7 @@ const conn = mysql
 // ======= Wanter_comment =======
 // 댓글 보여주기
 export const read_wanter_comment: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_comments']
   try {
     const header = req.params;
     const params: any[] = [header.boardId];
@@ -31,6 +32,7 @@ export const read_wanter_comment: RequestHandler = async (req, res) => {
 
 // 댓글 생성
 export const create_wanter_comment: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_comments']
   try {
     const params: any[] = [
       req.params.boardId,
@@ -52,6 +54,7 @@ export const create_wanter_comment: RequestHandler = async (req, res) => {
 
 // 댓글 수정
 export const update_wanter_comment: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_comments']
   try {
     const header = req.params;
     const body = req.body;
@@ -86,6 +89,7 @@ export const update_wanter_comment: RequestHandler = async (req, res) => {
 
 // 댓글 삭제
 export const delete_wanter_comment: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Wanter_comments']
   try {
     const header = req.params;
     const body = req.body;

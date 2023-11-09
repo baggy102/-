@@ -5,16 +5,29 @@ import session from "express-session";
 import indexRouter from "./routes/errands";
 import multer, { Multer } from "multer";
 
+import swaggerUi from "swagger-ui-express";
+import swaggerFile from "./swagger/swagger-output.json";
+
 const app: Express = express();
 const PORT = 8080;
 dotenv.config();
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile, { explorer: true })
+);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://13.125.221.221"],
+    origin: [
+      "http://localhost:3000",
+      "http://13.125.221.221",
+      "http://localhost:8080",
+    ],
     credentials: true,
   })
 );
