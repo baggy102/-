@@ -3,7 +3,8 @@ import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import session from "express-session";
 import indexRouter from "./routes/errands";
-import multer, { Multer } from "multer";
+import RedisStore from "connect-redis";
+import { redisClient } from "./config/redis";
 
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./swagger/swagger-output.json";
@@ -32,8 +33,16 @@ app.use(
   })
 );
 
+redisClient.connect();
+
+let redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "session:",
+});
+
 app.use(
   session({
+    store: redisStore,
     resave: false,
     saveUninitialized: false,
     secret: process.env.SECRET_KEY as string,
