@@ -26,7 +26,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "http://13.125.221.221",
+      "http://15.164.163.114",
       "http://localhost:8080",
     ],
     credentials: true,
@@ -52,8 +52,6 @@ app.use(
 );
 
 app.use("/api", indexRouter);
-
-// app.use((err: Error, req: Request, res: Response) => {})
 
 app.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);

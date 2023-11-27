@@ -40,6 +40,8 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const express_session_1 = __importDefault(require("express-session"));
 const errands_1 = __importDefault(require("./routes/errands"));
+const connect_redis_1 = __importDefault(require("connect-redis"));
+const redis_1 = require("./config/redis");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_output_json_1 = __importDefault(require("./swagger/swagger-output.json"));
 const app = (0, express_1.default)();
@@ -51,12 +53,18 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: [
         "http://localhost:3000",
-        "http://13.125.221.221",
+        "http://15.164.163.114",
         "http://localhost:8080",
     ],
     credentials: true,
 }));
+redis_1.redisClient.connect();
+let redisStore = new connect_redis_1.default({
+    client: redis_1.redisClient,
+    prefix: "session:",
+});
 app.use((0, express_session_1.default)({
+    store: redisStore,
     resave: false,
     saveUninitialized: false,
     secret: process.env.SECRET_KEY,
@@ -64,7 +72,6 @@ app.use((0, express_session_1.default)({
     cookie: { maxAge: 60 * 6000 * 24 },
 }));
 app.use("/api", errands_1.default);
-// app.use((err: Error, req: Request, res: Response) => {})
 app.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`http://localhost:${PORT}`);
 }));

@@ -155,38 +155,38 @@ export const read_detail_user: RequestHandler = async (req, res) => {
 };
 
 // 추천수s
-export const userLike: RequestHandler = async (req, res) => {
-  // #swagger.tags = ['Users']
-  try {
-    const header = req.params;
-    const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
-    const params: any[] = [header.user];
-    const [rows] = await conn.query(sql, params);
-    res.send(rows);
-  } catch (err) {
-    res.send(err);
-  }
-};
-
 // export const userLike: RequestHandler = async (req, res) => {
-//     // #swagger.tags = ['Users']
+//   // #swagger.tags = ['Users']
 //   try {
-//     if (!req.session.checkLiked) {
-//       req.session.checkLiked = true;
-//       req.session.checkLikedExpires = Date.now() + 60 * 60 * 24 * 1000;
-
-//       const header = req.params;
-//       const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
-//       const params: any[] = [header.user];
-//       const [rows] = await conn.query(sql, params);
-//       res.send(rows);
-//     } else {
-//       res.send("오늘 이미 추천하셨습니다.");
-//     }
+//     const header = req.params;
+//     const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
+//     const params: any[] = [header.user];
+//     const [rows] = await conn.query(sql, params);
+//     res.send(rows);
 //   } catch (err) {
 //     res.send(err);
 //   }
 // };
+
+export const userLike: RequestHandler = async (req, res) => {
+  // #swagger.tags = ['Users']
+  try {
+    if (!req.session.checkLiked) {
+      req.session.checkLiked = true;
+      req.session.checkLikedExpires = Date.now() + 60 * 60 * 24 * 1000;
+
+      const header = req.params;
+      const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
+      const params: any[] = [header.user];
+      const [rows] = await conn.query(sql, params);
+      res.send(rows);
+    } else {
+      res.send("오늘 이미 추천하셨습니다.");
+    }
+  } catch (err) {
+    res.send(err);
+  }
+};
 
 // 회원탈퇴
 export const userWithdrawal: RequestHandler<{

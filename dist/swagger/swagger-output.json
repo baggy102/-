@@ -13,9 +13,7 @@
     "paths": {
         "/api/login": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -43,9 +41,7 @@
         },
         "/api/register": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -79,9 +75,7 @@
         },
         "/api/checkId": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -106,9 +100,7 @@
         },
         "/api/checkName": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -133,9 +125,7 @@
         },
         "/api/logout": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -164,9 +154,7 @@
                 }
             },
             "patch": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "parameters": [
                     {
@@ -210,9 +198,7 @@
         },
         "/api/user": {
             "get": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -223,9 +209,7 @@
         },
         "/api/mainUser": {
             "get": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -236,9 +220,7 @@
         },
         "/api/user/{user}": {
             "get": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "parameters": [
                     {
@@ -259,9 +241,7 @@
         },
         "/api/user/{user}/userLike": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "parameters": [
                     {
@@ -282,9 +262,7 @@
         },
         "/api/user/wanter": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -309,9 +287,7 @@
         },
         "/api/user/helper": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -336,9 +312,7 @@
         },
         "/api/user/{user}/img": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "parameters": [
                     {
@@ -359,9 +333,7 @@
         },
         "/api/user/{user}/like": {
             "post": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": ["Users"],
                 "description": "",
                 "parameters": [
                     {
@@ -382,9 +354,7 @@
         },
         "/api/mainWanter": {
             "get": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -395,9 +365,7 @@
         },
         "/api/wanter": {
             "get": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -406,9 +374,7 @@
                 }
             },
             "post": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -445,9 +411,7 @@
         },
         "/api/wanter/{boardId}": {
             "get": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -466,9 +430,7 @@
                 }
             },
             "patch": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -510,9 +472,7 @@
                 }
             },
             "delete": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -533,9 +493,7 @@
         },
         "/api/wanter/{boardId}/hit": {
             "post": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -556,9 +514,7 @@
         },
         "/api/wanter/{boardId}/like": {
             "post": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -579,9 +535,7 @@
         },
         "/api/wanter/{boardId}/done": {
             "patch": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -602,9 +556,7 @@
         },
         "/api/wanter/{boardId}/comment": {
             "get": {
-                "tags": [
-                    "Wanter_comments"
-                ],
+                "tags": ["Wanter_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -623,9 +575,7 @@
                 }
             },
             "post": {
-                "tags": [
-                    "Wanter_comments"
-                ],
+                "tags": ["Wanter_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -660,9 +610,7 @@
         },
         "/api/wanter/{boardId}/comment/{commentId}": {
             "patch": {
-                "tags": [
-                    "Wanter_comments"
-                ],
+                "tags": ["Wanter_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -703,9 +651,7 @@
                 }
             },
             "delete": {
-                "tags": [
-                    "Wanter_comments"
-                ],
+                "tags": ["Wanter_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -734,9 +680,7 @@
         },
         "/api/mainHelper": {
             "get": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -747,9 +691,7 @@
         },
         "/api/helper": {
             "get": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -758,9 +700,7 @@
                 }
             },
             "post": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "responses": {
                     "200": {
@@ -791,9 +731,7 @@
         },
         "/api/helper/{boardId}": {
             "get": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -812,9 +750,7 @@
                 }
             },
             "patch": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -856,9 +792,7 @@
                 }
             },
             "delete": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -879,9 +813,7 @@
         },
         "/api/helper/{boardId}/hit": {
             "post": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -902,9 +834,7 @@
         },
         "/api/helper/{boardId}/like": {
             "post": {
-                "tags": [
-                    "Helper_boards"
-                ],
+                "tags": ["Helper_boards"],
                 "description": "",
                 "parameters": [
                     {
@@ -925,9 +855,7 @@
         },
         "/api/helper/{boardId}/comment": {
             "get": {
-                "tags": [
-                    "Helper_comments"
-                ],
+                "tags": ["Helper_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -946,9 +874,7 @@
                 }
             },
             "post": {
-                "tags": [
-                    "Helper_comments"
-                ],
+                "tags": ["Helper_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -983,9 +909,7 @@
         },
         "/api/helper/{boardId}/comment/{commentId}": {
             "patch": {
-                "tags": [
-                    "Helper_comments"
-                ],
+                "tags": ["Helper_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -1026,9 +950,7 @@
                 }
             },
             "delete": {
-                "tags": [
-                    "Helper_comments"
-                ],
+                "tags": ["Helper_comments"],
                 "description": "",
                 "parameters": [
                     {
@@ -1175,9 +1097,7 @@
         },
         "/api/search/{boardType}/{optionValue}": {
             "get": {
-                "tags": [
-                    "Wanter_boards"
-                ],
+                "tags": ["Wanter_boards"],
                 "description": "",
                 "parameters": [
                     {

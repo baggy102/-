@@ -29,7 +29,6 @@ const userLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const body = req.body;
         const sql = "SELECT * FROM user_info WHERE user_id = ? && user_pw = ?";
         const params = [body.user_id, body.user_pw];
-        // const result = await conn.query(sql, params);
         const [rows] = yield conn.query(sql, params);
         if (rows[0] != null) {
             req.session.user_info = rows[0];
@@ -169,14 +168,33 @@ const read_detail_user = (req, res) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.read_detail_user = read_detail_user;
 // 추천수s
+// export const userLike: RequestHandler = async (req, res) => {
+//   // #swagger.tags = ['Users']
+//   try {
+//     const header = req.params;
+//     const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
+//     const params: any[] = [header.user];
+//     const [rows] = await conn.query(sql, params);
+//     res.send(rows);
+//   } catch (err) {
+//     res.send(err);
+//   }
+// };
 const userLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // #swagger.tags = ['Users']
     try {
-        const header = req.params;
-        const sql = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
-        const params = [header.user];
-        const [rows] = yield conn.query(sql, params);
-        res.send(rows);
+        if (!req.session.checkLiked) {
+            req.session.checkLiked = true;
+            req.session.checkLikedExpires = Date.now() + 60 * 60 * 24 * 1000;
+            const header = req.params;
+            const sql = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
+            const params = [header.user];
+            const [rows] = yield conn.query(sql, params);
+            res.send(rows);
+        }
+        else {
+            res.send("오늘 이미 추천하셨습니다.");
+        }
     }
     catch (err) {
         res.send(err);
