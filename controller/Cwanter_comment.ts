@@ -2,17 +2,9 @@ import express, { RequestHandler } from "express";
 import session from "express-session";
 import multer from "multer";
 import config from "../config/config.json";
+import { conn } from "../config/mysql";
 
 const mysql = require("mysql2");
-
-const conn = mysql
-  .createPool({
-    host: config.development.host,
-    user: config.development.username,
-    password: config.development.password,
-    database: config.development.database,
-  })
-  .promise();
 
 // ======= Wanter_comment =======
 // 댓글 보여주기
