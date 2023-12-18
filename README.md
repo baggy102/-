@@ -24,23 +24,23 @@ API Docs : http://15.164.163.114:8080/api-docs/
 ![image](https://github.com/kdt-project-dteam/errands-web/assets/96116158/a4549957-0d3c-4ae4-9784-4f008f27202c)
 
 문제
-•	회원 추천 시, 
-무분별한 DB CALL로 인한 부하 발생 가능
+- 회원 추천 시, 
+- 무분별한 DB CALL로 인한 부하 발생 가능
 
 ![image](https://github.com/baggy102/-/assets/127190426/044f0f3c-0035-49f2-9668-f1aea3f8e13c)
 
 해결
-•	세션을 통해 이미 추천한 사람 식별, 무분별한 DB CALL 방지 함. 
-•	DB CALL 횟수 3 -> 1회로 감소, 평균 응답시간 50% 감소.
+- 세션을 통해 이미 추천한 사람 식별, 무분별한 DB CALL 방지 함. 
+- 	DB CALL 횟수 3 -> 1회로 감소, 평균 응답시간 50% 감소.
 
 ![image](https://github.com/baggy102/-/assets/127190426/684836e5-9723-49fb-a43d-6fb4b7798fff)
 
 문제
-•	Express 서버 Memory storage에 저장된 session으로 인한 
+- 	Express 서버 Memory storage에 저장된 session으로 인한 
 서버 부하의 위험과, 세션 데이터의 손실 가능
 
 해결
-•	프로젝트에 필요한 Session 요구사항을 고려해 
+- 프로젝트에 필요한 Session 요구사항을 고려해 
 in-memory 기반의 Redis 데이터베이스를 Session 저장소로 구현.
 
 Redis와 MySQL 저장소 비교
@@ -51,11 +51,11 @@ Session 데이터 액세스 패턴
 
 ![image](https://github.com/baggy102/-/assets/127190426/f78d694b-efa3-4993-8e8a-0959d5da40b9)
  
-•	Session 데이터의 유무 확인
-•	각 Session은 24hr 기준으로 삭제
+-	Session 데이터의 유무 확인
+- 각 Session은 24hr 기준으로 삭제
 
 Session 저장소에 따른 유저 시나리오 test
-•	유저 로그인 -> 게시물 작성 -> 회원 추천
+-	유저 로그인 -> 게시물 작성 -> 회원 추천
 
 ![image](https://github.com/baggy102/-/assets/127190426/ddd9fc44-23a6-4b92-932b-b280edf3b17d)
 
