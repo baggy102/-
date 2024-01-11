@@ -24,24 +24,51 @@ export const userLogin: RequestHandler = async (req, res) => {
   }
 };
 
+const checkUserExist = async (userId: string): Promise<boolean> => {
+  try {
+    const sql: string =
+      "SELECT user_id FROM user_info WHERE user_id = ? LIMIT 1";
+    const params: any[] = [userId];
+    const [rows] = await conn.query(sql, params);
+    return rows[0];
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const checkUserId: RequestHandler = async (req, res) => {
   // #swagger.tags = ['Users']
   try {
     const body = req.body;
-    const sql: string =
-      "SELECT user_id FROM user_info WHERE user_id = ? LIMIT 1";
-    const params: any[] = [body.user_id];
-    const [rows] = await conn.query(sql, params);
-    if (!rows[0]) {
-      return res.send(true);
+    const userExists = await checkUserExist(body.user_id); // checkUserExist 함수 호출로 회원 존재 여부 확인
+
+    if (!userExists) {
+      res.send(true); // 사용자가 존재하지 않음
     } else {
-      return res.send(false);
+      res.send(false); // 사용자가 이미 존재함
     }
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err.message);
   }
 };
 
+// export const checkUserId: RequestHandler = async (req, res) => {
+//   // #swagger.tags = ['Users']
+//   try {
+//     const body = req.body;
+//     const sql: string =
+//       "SELECT user_id FROM user_info WHERE user_id = ? LIMIT 1";
+//     const params: any[] = [body.user_id];
+//     const [rows] = await conn.query(sql, params);
+//     if (!rows[0]) {
+//       return res.send(true);
+//     } else {
+//       return res.send(false);
+//     }
+//   } catch (err) {
+//     res.send(err);
+//   }
+// };
 // 닉네임 중복검사
 export const checkUserName: RequestHandler = async (req, res) => {
   // #swagger.tags = ['Users']
@@ -63,43 +90,80 @@ export const checkUserName: RequestHandler = async (req, res) => {
 };
 
 // 회원가입
+// export const userRegister: RequestHandler = async (req, res) => {
+//   try {
+//     const { user_id, user_pw, user_name, user_type } = req.body;
+
+//     const userExists = await checkUserExist(user_id); // 회원이 이미 존재하는지 확인
+
+//     if (userExists) {
+//       res.send(false); // 이미 회원이 존재하는 경우
+//     } else {
+//       const createUserSql: string =
+//         "INSERT INTO user_info (user_id, user_pw, user_name, user_type) VALUES (?, ?, ?, ?)";
+//       const params: any[] = [user_id, user_pw, user_name, user_type];
+//       await conn.query(createUserSql, params); // 회원 생성
+//       res.send(true); // 회원 생성 완료
+//     }
+//   } catch (err) {
+//     res.status(500).send(err.message);
+//   }
+// };
+
 export const userRegister: RequestHandler = async (req, res) => {
-  // #swagger.tags = ['Users']
   try {
-    const body = req.body;
+    const { user_id, user_pw, user_name, user_type } = req.body;
+
     const sql: string =
-      "SELECT user_id FROM user_info WHERE user_id = ? LIMIT 1";
-    const params: any[] = [
-      body.user_id,
-      body.user_pw,
-      body.user_name,
-      body.user_type,
-    ];
-    const createUserSql: string =
-      "INSERT INTO user_info (user_id, user_pw, user_name, user_type) VALUES(?, ?, ?, ?);";
-    const [rows] = await conn.query(sql, params[0]);
-    if (!rows[0]) {
-      await conn.query(createUserSql, params);
-      res.send(true);
+      "INSERT INTO user_info (user_id, user_pw, user_name, user_type) SELECT ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM user_info WHERE user_id = ? LIMIT 1)";
+
+    const params: any[] = [user_id, user_pw, user_name, user_type, user_id];
+    const [result] = await conn.query(sql, params);
+
+    if (result.affectedRows === 1) {
+      res.send(true); // 회원 생성 완료
     } else {
-      res.send(false);
+      res.send(false); // 이미 회원이 존재하는 경우
     }
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err.message);
   }
 };
+
+// export const userRegister: RequestHandler = async (req, res) => {
+//   // #swagger.tags = ['Users']
+//   try {
+//     const body = req.body;
+//     const sql: string =
+//       "SELECT user_id FROM user_info WHERE user_id = ? LIMIT 1";
+//     const params: any[] = [
+//       body.user_id,
+//       body.user_pw,
+//       body.user_name,
+//       body.user_type,
+//     ];
+//     const createUserSql: string =
+//       "INSERT INTO user_info (user_id, user_pw, user_name, user_type) VALUES(?, ?, ?, ?);";
+//     const [rows] = await conn.query(sql, params[0]);
+//     if (!rows[0]) {
+//       await conn.query(createUserSql, params);
+//       res.send(true);
+//     } else {
+//       res.send(false);
+//     }
+//   } catch (err) {
+//     res.send(err);
+//   }
+// };
 
 // 로그아웃
 export const userLogout: RequestHandler = async (req, res) => {
   // #swagger.tags = ['Users']
   try {
-    console.log(req.session);
     req.session.destroy((err: Error) => {
       if (err) {
         throw err;
       }
-      console.log("로그아웃 여부");
-      console.log(req.session);
       res.send(true);
     });
   } catch (err) {
@@ -145,20 +209,6 @@ export const read_detail_user: RequestHandler = async (req, res) => {
     res.send(err);
   }
 };
-
-// 추천수s
-// export const userLike: RequestHandler = async (req, res) => {
-//   // #swagger.tags = ['Users']
-//   try {
-//     const header = req.params;
-//     const sql: string = `UPDATE User_info SET user_like = user_like + 1 WHERE id = ?`;
-//     const params: any[] = [header.user];
-//     const [rows] = await conn.query(sql, params);
-//     res.send(rows);
-//   } catch (err) {
-//     res.send(err);
-//   }
-// };
 
 export const userLike: RequestHandler = async (req, res) => {
   // #swagger.tags = ['Users']
@@ -219,7 +269,6 @@ export const userUpdate: RequestHandler = async (req, res) => {
     const sql: string =
       "SELECT user_name FROM user_info WHERE user_name = ? LIMIT 1";
     const [auth] = await conn.query(sql, params);
-    console.log(auth[0]);
 
     if (auth[0].user_name == userConfig.user_name) {
       const body = req.body;
@@ -234,9 +283,7 @@ export const userUpdate: RequestHandler = async (req, res) => {
       const updateSql: string =
         "UPDATE user_info SET user_id = ?, user_pw = ?, user_name = ?, user_type = ? WHERE id = ?";
       const [rows] = await conn.query(updateSql, updateParams, headParams);
-      console.log(rows);
       if (rows === 0) {
-        console.log(rows);
         return res.send(false);
       } else {
         res.send(true);
